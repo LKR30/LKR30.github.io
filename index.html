@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>今天吃什么 & 去哪玩</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<style>
+/* ==================== 你原来的PC代码（一分不动） ==================== */
+html,body{margin:0;height:100%;overflow:hidden;
+background:url(./images/横屏背景.jpg) center/cover no-repeat;
+font:16px/1.4 "Microsoft YaHei",sans-serif;}
+
+.box{width:450px;height:450px;position:absolute;top:50%;transform:translateY(-50%);
+background:rgba(255,255,255,.5);border-radius:20px;box-shadow:0 8px 20px rgba(0,0,0,.15);}
+.left{left:8%;}
+.right{right:8%;}
+
+.wheelWrap{width:300px;height:300px;margin:20px auto 0;position:relative;}
+.wheel{width:100%;height:100%;border-radius:50%;overflow:hidden;
+box-shadow:0 0 0 6px #fff,0 0 0 8px #ddd;transition:transform 3s cubic-bezier(.2,.8,.2,1);}
+.pointer{position:absolute;left:50%;top:-12px;transform:translateX(-50%);
+width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;
+border-top:24px solid #ff5a5a;z-index:10;}
+.btn{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+width:60px;height:60px;border-radius:50%;background:#ff5a5a;color:#fff;font-size:18px;
+border:none;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,.2);z-index:11;}
+.btn:active{transform:translate(-50%,-50%) scale(.95);}
+.btn:disabled{background:#999;cursor:not-allowed;}
+
+.bar{display:flex;align-items:center;justify-content:center;margin-top:12px;padding:0 20px;}
+.bar input{flex:1;height:32px;padding:0 8px;border:1px solid #ccc;border-radius:4px 0 0 4px;border-right:0;}
+.bar button{height:34px;width:48px;border:1px solid #4caf50;background:#4caf50;color:#fff;
+border-radius:0 4px 4px 0;cursor:pointer;font-size:14px;}
+h3{text-align:center;margin:14px 0 0;font-size:20px;color:#333;}
+
+/* ==================== 手机端补丁（仅≤768px生效） ==================== */
+@media (max-width: 768px) {
+  body {
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px 0;
+    background: url(./images/竖屏背景.png) center/cover no-repeat;
+    overflow: auto;
+  }
+  .box {
+    position: static;
+    transform: none;
+    width: 80vw;
+    max-width: 400px;
+    height: auto;
+    margin: 0 auto;
+    padding-bottom: 10px;
+  }
+  .wheelWrap {
+    width: 70vw;
+    max-width: 300px;
+    height: 70vw;
+    max-height: 300px;
+    clip-path: circle(50% at 50% 50%);
+  }
+  .wheel {
+    overflow: visible !important;
+  }
+  /* 文字扇区 */
+  .wheel span {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    font-size: max(3vw, 12px);
+    font-weight: bold;
+    color: #222;
+    white-space: nowrap;
+    transform-origin: center;
+    transform: translate(-50%, -50%) rotate(var(--r)) translateY(-38%);
+    z-index: 5;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== 吃什么 ==================== -->
+<div class="box left">
+  <h3>今天吃什么</h3>
+  <div class="wheelWrap">
+    <div class="pointer"></div>
+    <div class="wheel" id="foodWheel"></div>
+    <button class="btn" id="foodBtn" onclick="startSpin('food')">GO</button>
+  </div>
+  <div class="bar">
+    <input id="foodInput" placeholder="新增食物" onkeypress="if(event.key==='Enter')addItem('food')">
+    <button onclick="addItem('food')">确认</button>
+  </div>
+</div>
+
+<!-- ==================== 去哪玩 ==================== -->
+<div class="box right">
+  <h3>去哪儿玩</h3>
+  <div class="wheelWrap">
+    <div class="pointer"></div>
+    <div class="wheel" id="playWheel"></div>
+    <button class="btn" id="playBtn" onclick="startSpin('play')">GO</button>
+  </div>
+  <div class="bar">
+    <input id="playInput" placeholder="新增地点" onkeypress="if(event.key==='Enter')addItem('play')">
+    <button onclick="addItem('play')">确认</button>
+  </div>
+</div>
+
+<script>
+/* ========= 数据 ========= */
+let foodArr = ['火锅','烧烤','日料','炸鸡','牛肉面','麻辣烫','酸菜鱼','自助餐'];
+let playArr = ['公园野餐','逛商场','爬山','看展','K歌','密室逃脱','海边散步','游乐园'];
+
+/* ========= 随机颜色 ========= */
+function randColor(){
+  return `hsl(${Math.floor(Math.random()*360)},70%,80%)`;
+}
+
+/* ========= 画转盘 ========= */
+function drawWheel(el, arr){
+  el.innerHTML = '';
+  const len = arr.length;
+  if(!len) return el.style.background='#fff';
+  const angle = 360 / len;
+  let bg = [];
+  for(let i=0;i<len;i++) bg.push(`${randColor()} ${i*angle}deg ${(i+1)*angle}deg`);
+  el.style.background = `conic-gradient(${bg.join(',')})`;
+
+  arr.forEach((txt,i)=>{
+    const span = document.createElement('span');
+    const ang = i * angle + angle / 2;
+    span.style.cssText = `position:absolute;left:50%;top:50%;
+transform:translate(-50%,-50%) rotate(${ang}deg) translateY(-95px);
+transform-origin:center;font-size:14px;font-weight:bold;color:#222;white-space:nowrap;`;
+    span.textContent = txt;
+    el.appendChild(span);
+  });
+}
+
+/* ========= 初始渲染 ========= */
+function refresh(){
+  drawWheel(document.getElementById('foodWheel'), foodArr);
+  drawWheel(document.getElementById('playWheel'), playArr);
+}
+refresh();
+
+/* ========= 新增项目 ========= */
+function addItem(type){
+  const input = document.getElementById(type==='food'?'foodInput':'playInput');
+  const v = input.value.trim();
+  if(!v) return;
+  const arr = type==='food'?foodArr:playArr;
+  if(arr.includes(v)) return alert('已存在');
+  arr.push(v); input.value=''; refresh();
+}
+
+/* ========= 旋转 ========= */
+function startSpin(type){
+  const btn = document.getElementById(type==='food'?'foodBtn':'playBtn');
+  if(btn.disabled) return;
+  btn.disabled = true;
+  const arr = type==='food'?foodArr:playArr;
+  const len = arr.length;
+  if(!len) return alert('列表为空，请先添加项目！');
+  const angle = 360/len;
+  const pick = Math.floor(Math.random()*len);
+  const base = 5*360;
+  const final = base + (360 - pick*angle - angle/2);
+  const wheel = document.getElementById(type==='food'?'foodWheel':'playWheel');
+  wheel.style.transform = `rotate(${final}deg)`;
+  setTimeout(()=>{
+    alert(`结果：${arr[pick]}`);
+    wheel.style.transition='none';
+    wheel.style.transform=`rotate(${final%360}deg)`;
+    setTimeout(()=>{wheel.style.transition=''; btn.disabled=false;},30);
+  },3000);
+}
+</script>
+</body>
+</html>
