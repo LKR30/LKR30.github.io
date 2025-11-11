@@ -1,0 +1,51 @@
+/* ===== 通用 Reset ===== */
+*{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased;}
+html{height:100%;}
+body{
+  min-height:100%;
+  display:flex;
+  flex-direction:column;
+  background:#f2f2f7 url(../images/竖屏背景.png) center/cover no-repeat;
+  font:16px/1.4 "SF Pro Text","Microsoft YaHei",sans-serif;
+}
+.page{flex:1;padding:20px 0 100px;display:flex;flex-direction:column;align-items:center;gap:20px;}
+h2{text-align:center;color:#333;margin-top:10px;}
+
+/* ===== iOS 玻璃底栏 ===== */
+
+.glassTab {
+  position: fixed;
+  left: 50%;
+  bottom: 8px;
+  transform: translateX(-50%);
+  width: 50%;                /* 加长 */
+  max-width: 320px;
+  height: auto;
+  padding: 8px 5px 6px;      /* 上下比文字高5px，左右5px */
+  border-radius: 18px;
+  background: rgba(255,255,255,.35);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,.4);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  cursor: default;
+}
+
+/* 三等分等距 */
+.glassTab a {
+  flex: 1 1 0;
+  text-align: center;
+  font-size: 22px;
+  color: #666;
+  text-decoration: none;
+  line-height: 1;
+  padding: 0 5px;          /* 保证左右5px边距 */
+  transition: color .2s;
+}
+.glassTab a.active { color: #ff5a5a; font-weight: 600; }
+
+/* 去掉旧版残留 */
+.glassTab::before,
+.glassTab::after { content: none; }

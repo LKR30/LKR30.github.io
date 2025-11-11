@@ -3,37 +3,35 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
-<title>今天吃什么</title>
+<title>去哪玩</title>
 <link rel="stylesheet" href="css/common.css">
 <link rel="stylesheet" href="css/wheel.css">
 </head>
 <body>
 <div class="page">
-  <h2>今天吃什么</h2>
+  <h2>去哪玩</h2>
   <div class="wheelWrap">
     <div class="pointer"></div>
     <div class="wheel" id="wheel"></div>
     <button class="btn" id="goBtn">GO</button>
   </div>
   <div class="bar">
-    <input id="addInput" placeholder="新增食物" onkeypress="if(event.key==='Enter')addItem()">
+    <input id="addInput" placeholder="新增地点" onkeypress="if(event.key==='Enter')addItem()">
     <button onclick="addItem()">确认</button>
   </div>
 </div>
 
-<!-- 底部 iOS 玻璃导航 -->
 <nav class="glassTab">
-  <a href="index.html" class="active">吃</a>
-  <a href="play.html">玩</a>
+  <a href="index.html">吃</a>
+  <a href="play.html" class="active">玩</a>
   <a href="drink.html">喝</a>
 </nav>
 
 <script src="js/common.js"></script>
 <script src="js/wheel.js"></script>
 <script>
-  /* 本页专属数据 */
-  const defaultArr = ['猪脚饭','砂锅菜','粤式小炒','鲍汁捞饭','杀猪粉','牛腩粉','螺蛳粉','云吞面','正新香煲'];
-  initPage(defaultArr,'food');
+  const defaultArr = ['逛商场','爬山','看展','唱歌','海边散步','游乐园'];
+  initPage(defaultArr,'play');
 </script>
 </body>
 </html>
