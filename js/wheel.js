@@ -57,6 +57,11 @@ white-space:nowrap;max-width:80px;overflow:hidden;text-overflow:ellipsis;pointer
 text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);`;
     sp.textContent=txt; sp.title=txt;
     el.appendChild(sp);
+    setTimeout(() => {
+      sp.style.transition = 'all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+      sp.style.opacity = '1';
+      sp.style.transform = `translate(-50%, -50%) rotate(${a}deg) translateY(-95px)`;
+    }, 50 * i); // 错开动画时间，形成序列效果
   });
 }
 
@@ -92,6 +97,12 @@ function startSpin(){
     return;
   }
   
+  // 检查设备是否支持震动API并在开始转动时震动
+  if ("vibrate" in navigator) {
+    // 震动模式：短震动3次，模拟开始转动的反馈
+    navigator.vibrate([50, 10, 50, 10, 50]);
+  }
+  
   // 确保移除之前的过渡效果
   wheelEl.style.transition = 'none';
   // 重置旋转角度
@@ -110,7 +121,19 @@ function startSpin(){
   wheelEl.style.transition = 'transform 3s cubic-bezier(.2,.8,.2,1)';
   wheelEl.style.transform=`rotate(${final}deg)`;
   
+  // 转动过程中添加震动效果（在1.5秒时）
+  setTimeout(() => {
+    if ("vibrate" in navigator) {
+      navigator.vibrate([30, 10, 30]);
+    }
+  }, 1000);
+  
   setTimeout(()=>{
+    // 转盘停止时再次震动，提供结束反馈
+    if ("vibrate" in navigator) {
+      navigator.vibrate(500);
+    }
+    
     showAlert(currentArr[pick], true);
     wheelEl.classList.remove('spinning');
     // 保留最终角度但移除过渡效果
@@ -171,4 +194,57 @@ function showAlert(message, isResult = true) {
       alertEl.classList.remove('show');
     }
   };
+
+    // 添加结果文本动画
+  resultEl.style.opacity = '0';
+  resultEl.style.transform = 'translateY(20px)';
+  resultEl.style.transition = 'all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+  
+  alertEl.classList.add('show');
+  
+  // 触发重绘后执行动画
+  setTimeout(() => {
+    resultEl.textContent = message;
+    resultEl.style.opacity = '1';
+    resultEl.style.transform = 'translateY(0)';
+  }, 50);
 }
+
+// 修复文字动画变量绑定
+const originalDrawWheel = drawWheel;
+drawWheel = function(el, arr) {
+  originalDrawWheel(el, arr);
+  // 为每个选项设置动画变量
+  const spans = el.querySelectorAll('span');
+  spans.forEach(span => {
+    // 正确提取旋转角度值（仅数字部分）
+    const rotateVal = span.style.transform.match(/rotate\(([^)]+)\)/)[1];
+    span.style.setProperty('--a', rotateVal);
+  });
+};
+
+
+// 长按事件视觉反馈
+wheelEl.addEventListener('touchstart', () => {
+    if (!wheelEl.classList.contains('spinning')) {
+        // 添加长按视觉反馈
+        wheelEl.classList.add('long-press');
+        
+        pressTimer = setTimeout(() => {
+            // 清除逻辑保持不变...
+            // 清除后移除视觉反馈
+            wheelEl.classList.remove('long-press');
+        }, 1500);
+    }
+}, { passive: true });
+
+// 在touchend和touchcancel中移除视觉反馈
+wheelEl.addEventListener('touchend', () => {
+    clearTimeout(pressTimer);
+    wheelEl.classList.remove('long-press');
+});
+
+wheelEl.addEventListener('touchcancel', () => {
+    clearTimeout(pressTimer);
+    wheelEl.classList.remove('long-press');
+});

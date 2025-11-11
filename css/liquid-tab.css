@@ -33,6 +33,26 @@
     0 12px 40px rgba(0, 0, 0, 0.15);
   
   user-select: none;
+  overflow: hidden; /* 确保水滴不会超出导航栏范围 */
+}
+
+/* 水滴指示器 - iOS 26风格 */
+.liquidTab::before {
+  content: '';
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+  top: 50%;
+  left: 0;
+  transform: translate(-50%, -50%) scale(0); /* 初始隐藏 */
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  filter: blur(4px); /* 增强模糊效果，更像水滴 */
+  z-index: 0;
+  pointer-events: none;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.6); /* 水滴光晕 */
 }
 
 /* 单个按钮 */
@@ -53,8 +73,7 @@
 
 /* 激活态 - 红色文字 */
 .liquidTab a.active {
-  color: var(--accent);
-  font-weight: 600;
+  background-color: pink;
 }
 
 /* 按压态 - 缩放和背景变化 */
@@ -62,4 +81,87 @@
   transform: scale(0.95);
   background: rgba(255, 255, 255, 0.3);
   transition-duration: 0.1s;
+}
+
+/* 在现有的style区域添加 */
+h2 {
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 8px;
+  margin: 20px auto; /* 保持居中 */
+  border-radius: 30px;
+}
+
+.liquidTab a img {
+  width: 30px;
+  height: 30px;
+}
+
+/* 导航项激活动画 */
+.liquidTab a.active {
+  animation: tabPulse 1.3s infinite;
+}
+
+@keyframes tabPulse {
+  0% { box-shadow: 0 0 0 0 rgba(255, 90, 90, 0.4); }
+  70% { box-shadow: 0 0 0 8px rgba(255, 90, 90, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 90, 90, 0); }
+}
+
+/* 导航项图标动画 */
+.liquidTab a img {
+  transition: transform 0.3s ease;
+}
+
+.liquidTab a:hover img {
+  transform: scale(1.5);
+}
+
+/* 在现有样式基础上添加 */
+.liquidTab {
+  /* 确保导航栏是相对定位，作为水滴的容器 */
+  position: relative;
+  overflow: hidden;
+}
+
+/* 水滴指示器元素 */
+.liquid-drop {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+  top: 50%;
+  left: 0;
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  filter: blur(4px);
+  z-index: 0;
+  pointer-events: none;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+}
+
+/* 滑动椭圆指示器 */
+.slide-indicator {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(6px);
+  transition: transform 0.1s ease-out, opacity 0.2s ease;
+}
+
+/* 水滴尾部效果 */
+.slide-indicator::after {
+  content: '';
+  position: absolute;
+  width: 60%;
+  height: 60%;
+  background: inherit;
+  border-radius: 50%;
+  filter: blur(4px);
+  transition: all 0.15s ease-out;
 }

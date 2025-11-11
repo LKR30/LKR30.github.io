@@ -9,4 +9,41 @@ body{
   font:16px/1.4 "SF Pro Text","Microsoft YaHei",sans-serif;
 }
 .page{flex:1;padding:20px 0 100px;display:flex;flex-direction:column;align-items:center;gap:20px;}
-h2{text-align:center;color:#333;margin-top:10px;}
+h2{text-align:center;color:#333;margin-top:10px;animation: titlePulse 3s infinite ease-in-out;}
+
+/* 页面切换淡入淡出效果 */
+body {
+  opacity: 0;
+  animation: pageFadeIn 0.6s ease forwards;
+}
+
+@keyframes titlePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+@keyframes pageFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* 导航切换高亮过渡 */
+.liquidTab a {
+  position: relative;
+  overflow: hidden;
+}
+
+.liquidTab a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 3px;
+  background: var(--accent);
+  transition: width 0.3s ease;
+}
+
+.liquidTab a.active::after {
+  width: 100%;
+}
