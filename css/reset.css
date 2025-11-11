@@ -1,0 +1,12 @@
+/* ===== 通用 Reset ===== */
+*{margin:0;padding:0;box-sizing:border-box;-webkit-font-smoothing:antialiased;}
+html{height:100%;}
+body{
+  min-height:100%;
+  display:flex;
+  flex-direction:column;
+  background:#f2f2f7 url(../images/竖屏背景.png) center/cover no-repeat;
+  font:16px/1.4 "SF Pro Text","Microsoft YaHei",sans-serif;
+}
+.page{flex:1;padding:20px 0 100px;display:flex;flex-direction:column;align-items:center;gap:20px;}
+h2{text-align:center;color:#333;margin-top:10px;}
