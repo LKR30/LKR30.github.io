@@ -10,8 +10,30 @@
   height: 100%;
   border-radius: 50%;
   overflow: hidden;
-  box-shadow: 0 0 0 6px #fff, 0 0 0 8px #ddd;
+  position: relative;
+  box-shadow: 
+    0 0 0 6px rgba(255, 255, 255, 0.9),
+    0 0 0 8px rgba(255, 90, 90, 0.3),
+    0 20px 40px rgba(0, 0, 0, 0.2);
   transition: transform 3s cubic-bezier(.2,.8,.2,1);
+  background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+}
+
+.wheel::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  border-radius: 50%;
+  background: 
+    radial-gradient(circle at 30% 30%, 
+      rgba(255, 255, 255, 0.8) 0%, 
+      rgba(255, 255, 255, 0.4) 50%,
+      rgba(255, 255, 255, 0.1) 100%);
+  z-index: 1;
+  pointer-events: none;
 }
 
 .wheel.spinning {
@@ -21,14 +43,36 @@
 .pointer {
   position: absolute;
   left: 50%;
-  top: -12px;
+  top: -25px;
   transform: translateX(-50%);
+  width: 40px;
+  height: 40px;
+  z-index: 10;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pointer::before {
+  content: '';
+  position: absolute;
   width: 0;
   height: 0;
-  border-left: 12px solid transparent;
-  border-right: 12px solid transparent;
-  border-top: 24px solid #ff5a5a;
-  z-index: 10;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 16px solid #ff5a5a;
+  top: 0;
+}
+
+.pointer::after {
+  content: '▼';
+  position: absolute;
+  top: 8px;
+  color: #ff5a5a;
+  font-size: 16px;
+  font-weight: bold;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .btn {
@@ -36,134 +80,239 @@
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: 60px;
-  height: 60px;
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
-  background: #ff5a5a;
+  background: linear-gradient(135deg, #ff5a5a, #ff8a8a);
   color: #fff;
   font-size: 18px;
+  font-weight: bold;
   border: none;
   cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0,0,0,.2);
+  box-shadow: 
+    0 8px 25px rgba(255, 90, 90, 0.4),
+    inset 0 2px 4px rgba(255, 255, 255, 0.3),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.1);
   z-index: 11;
-  transition: all 0.1s ease;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  right: 2px;
+  bottom: 2px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.2) 0%, 
+    rgba(255, 255, 255, 0) 50%,
+    rgba(0, 0, 0, 0.05) 100%);
+  pointer-events: none;
 }
 
 .btn:active {
   transform: translate(-50%, -50%) scale(0.95);
+  box-shadow: 
+    0 4px 15px rgba(255, 90, 90, 0.4),
+    inset 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .btn:disabled {
-  background: #999;
+  background: linear-gradient(135deg, #cccccc, #aaaaaa);
   cursor: not-allowed;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .bar {
   display: flex;
   align-items: center;
-  justify-content: center;.wheelWrap {
-    width: 300px;
-    height: 300px;
-    margin: 20px auto 0;
-    position: relative;
-}
-
-.wheel {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    overflow: hidden;
-    box-shadow: 0 0 0 6px #fff, 0 0 0 8px #ddd;
-    transition: transform 3s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.pointer {
-    position: absolute;
-    left: 50%;
-    top: -12px;
-    transform: translateX(-50%);
-    width: 0;
-    height: 0;
-    border-left: 12px solid transparent;
-    border-right: 12px solid transparent;
-    border-top: 24px solid #ff5a5a;
-    z-index: 10;
-}
-
-.btn {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: #ff5a5a;
-    color: #fff;
-    font-size: 18px;
-    border: none;
-    cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    z-index: 11;
-    transition: all 0.1s ease;
-}
-
-.btn:active {
-    transform: translate(-50%, -50%) scale(0.95);
-}
-
-.btn:disabled {
-    background: #999;
-    cursor: not-allowed;
-}
-
-.bar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 12px;
-    padding: 0 20px;
-}
-
-.bar input {
-    flex: 1;
-    height: 32px;
-    padding: 0 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px 0 0 4px;
-    border-right: 0;
-}
-
-.bar button {
-    height: 34px;
-    width: 48px;
-    border: 1px solid #4caf50;
-    background: #4caf50;
-    color: #fff;
-    border-radius: 0 4px 4px 0;
-    cursor: pointer;
-    font-size: 14px;
-}
-  margin-top: 12px;
+  justify-content: center;
+  margin-top: 20px;
   padding: 0 20px;
+  gap: 0;
 }
 
 .bar input {
   flex: 1;
-  height: 32px;
-  padding: 0 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px 0 0 4px;
-  border-right: 0;
+  height: 44px;
+  padding: 0 16px;
+  border: none;
+  border-radius: 22px 0 0 22px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 
+    0 2px 10px rgba(0, 0, 0, 0.1),
+    inset 0 1px 2px rgba(255, 255, 255, 0.8);
+  font-size: 16px;
+  color: #333;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.bar input:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 
+    0 4px 20px rgba(255, 90, 90, 0.2),
+    inset 0 1px 2px rgba(255, 255, 255, 0.9);
+}
+
+.bar input::placeholder {
+  color: #999;
+  font-size: 15px;
 }
 
 .bar button {
-  height: 34px;
-  width: 48px;
-  border: 1px solid #4caf50;
-  background: #4caf50;
+  height: 44px;
+  width: 80px;
+  border: none;
+  border-radius: 0 22px 22px 0;
+  background: linear-gradient(135deg, #ff5a5a, #ff8a8a);
   color: #fff;
-  border-radius: 0 4px 4px 0;
+  font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
-  font-size: 14px;
+  box-shadow: 
+    0 2px 10px rgba(255, 90, 90, 0.3),
+    inset 0 1px 1px rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.bar button:active {
+  transform: scale(0.95);
+  box-shadow: 
+    0 1px 5px rgba(255, 90, 90, 0.4),
+    inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* 自定义弹窗样式 */
+.custom-alert {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(8px);
+}
+
+.custom-alert.show {
+  display: flex;
+  animation: fadeIn 0.3s ease;
+}
+
+.custom-alert-content {
+  background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+  padding: 30px 40px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  max-width: 280px;
+  width: 80%;
+  position: relative;
+  transform: scale(0.8);
+  animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.custom-alert-content::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(135deg, #ff5a5a, #ff8a8a);
+  border-radius: 22px;
+  z-index: -1;
+  opacity: 0.8;
+}
+
+.alert-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.alert-result {
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+  margin: 15px 0;
+  padding: 12px;
+  background: rgba(255, 90, 90, 0.1);
+  border-radius: 12px;
+  border: 2px dashed #ff5a5a;
+}
+
+.alert-confirm {
+  background: linear-gradient(135deg, #ff5a5a, #ff8a8a);
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+  box-shadow: 0 4px 15px rgba(255, 90, 90, 0.3);
+  transition: all 0.3s ease;
+}
+
+.alert-confirm:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 8px rgba(255, 90, 90, 0.4);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* 转盘项目文字样式优化 */
+.wheel span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform-origin: center;
+  font-size: min(2.2vmin, 14px);
+  font-weight: bold;
+  color: #333;
+  white-space: nowrap;
+  max-width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+  z-index: 2;
+}
+
+/* 在wheel.css中确保这个样式存在 */
+.wheel.spinning {
+  transition: transform 3s cubic-bezier(.2,.8,.2,1);
+  /* 可以添加一个旋转原点确保旋转中心正确 */
+  transform-origin: center center;
 }
